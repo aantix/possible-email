@@ -3,6 +3,7 @@ PROFILE_URL = 'https://profiles.rapportive.com/contacts/email/'
 
 module PossibleEmail
   class ResponseGetter
+    PROXYS = File.readlines(ENV['PROXYS_FILE'])
     class << self
       def create_session_token(email)
         status_url = STATUS_URL + email
@@ -23,7 +24,8 @@ module PossibleEmail
 
       def request_url(url, header = {})
         request = HTTPI::Request.new
-        request.url = url
+        request.url     = url
+        request.proxy   = "#{ENV['PROXY_USERNAME']}:#{ENV['PROXY_PASSWORD']}@#{PROXYS[rand(PROXYS.size)]}"
         request.headers = header
 
         JSON.parse(HTTPI.get(request).body)
