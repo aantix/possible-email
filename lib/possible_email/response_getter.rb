@@ -25,7 +25,7 @@ module PossibleEmail
       def request_url(url, header = {})
         request = HTTPI::Request.new
         request.url     = url
-        request.proxy   = "#{ENV['PROXY_USERNAME']}:#{ENV['PROXY_PASSWORD']}@#{PROXYS[rand(PROXYS.size)]}"
+        request.proxy   = "http://#{ENV['PROXY_USERNAME']}:#{ENV['PROXY_PASSWORD']}@#{PROXYS[rand(PROXYS.size)]}"
         request.headers = header
 
         JSON.parse(HTTPI.get(request).body)
