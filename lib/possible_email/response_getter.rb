@@ -3,7 +3,7 @@ PROFILE_URL = 'https://profiles.rapportive.com/contacts/email/'
 
 module PossibleEmail
   class ResponseGetter
-    PROXYS = File.readlines(ENV['PROXYS_FILE'])
+    PROXYS = File.readlines(ENV['PROXYS_FILE']) rescue []
     class << self
       def create_session_token(email)
         status_url = STATUS_URL + email
