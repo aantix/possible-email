@@ -25,10 +25,22 @@ module PossibleEmail
       def request_url(url, header = {})
         request = HTTPI::Request.new
         request.url     = url
-        request.proxy   = "http://#{ENV['PROXY_USERNAME']}:#{ENV['PROXY_PASSWORD']}@#{PROXYS[rand(PROXYS.size)]}"
         request.headers = header
 
-        JSON.parse(HTTPI.get(request).body)
+        5.times do
+          request.proxy = "http://#{ENV['PROXY_USERNAME']}:#{ENV['PROXY_PASSWORD']}@#{PROXYS[rand(PROXYS.size)]}"
+
+          begin
+            response = JSON.parse(HTTPI.get(request).body)
+            return response
+          rescue => e
+            # Probably a Net::HTTPFatalError: 503 "Service Unavailable" from the proxy
+            sleep 1
+          end
+        end
+
+
+
       end
 
       def valid_response?(response)
